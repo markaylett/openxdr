@@ -66,6 +66,7 @@ static bool_t
 xdrbuf_grow(XDR* xdrs, u_int len)
 {
     caddr_t addr;
+    /* Current position. */
     u_int pos = xdrbuf_getpos(xdrs);
     /* Current allocation size. */
     u_int size = pos + xdrs->x_handy;
@@ -100,7 +101,7 @@ XDR_API void
 xdrbuf_create(XDR *xdrs, u_int size, enum xdr_op op)
 {
 	caddr_t addr;
-    size = MAX(sizeof(int32_t), size);
+    size = MAX(BUFSIZ, size);
 	addr = malloc(size);
 
 	/*
@@ -109,12 +110,14 @@ xdrbuf_create(XDR *xdrs, u_int size, enum xdr_op op)
 	 */
 
 	if (!addr) {
-        xdrs->x_base = addr;
 #if HAVE_SYSLOG_H
 		(void) syslog(LOG_ERR, mem_err_msg_rec);
 #else
 		(void) fprintf(stderr, "%s\n", mem_err_msg_rec);
 #endif
+        xdrs->x_private = NULL;
+        xdrs->x_base = NULL;
+        xdrs->x_handy = 0;
 		return;
 	}
 

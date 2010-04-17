@@ -58,7 +58,7 @@ apply_buf(bool_t (*fn)(), caddr_t in, u_int size)
     XDR xin, xout;
     xdrbuf_create(&xin, 0, XDR_ENCODE);
     /* Inline to force grow. */
-    if (!fn(&xin, in) || !xdr_inline(&xin, 256)) {
+    if (!fn(&xin, in) || !xdr_inline(&xin, 2 * BUFSIZ)) {
         xdr_destroy(&xin);
         return FALSE;
     }
