@@ -728,3 +728,77 @@ xdr_wrapstring(XDR *xdrs, char **cpp)
 {
 	return (xdr_string(xdrs, cpp, LASTUNSIGNED));
 }
+
+#if defined(_MSC_VER)
+XDR_API bool_t
+xdr_int8_t(XDR *xdrs, int8_t *p)
+{
+    return xdr_char(xdrs, p);
+}
+
+XDR_API bool_t
+xdr_uint8_t(XDR *xdrs, uint8_t *p)
+{
+    return xdr_u_char(xdrs, p);
+}
+
+XDR_API bool_t
+xdr_int16_t(XDR *xdrs, int16_t *p)
+{
+    return xdr_short(xdrs, p);
+}
+
+XDR_API bool_t
+xdr_uint16_t(XDR *xdrs, uint16_t *p)
+{
+    return xdr_u_short(xdrs, p);
+}
+
+XDR_API bool_t
+xdr_int32_t(XDR *xdrs, int32_t *p)
+{
+    return xdr_int(xdrs, p);
+}
+
+XDR_API bool_t
+xdr_uint32_t(XDR *xdrs, uint32_t *p)
+{
+    return xdr_u_int(xdrs, p);
+}
+
+XDR_API bool_t
+xdr_int64_t(XDR *xdrs, int64_t *p)
+{
+    return xdr_hyper(xdrs, p);
+}
+
+XDR_API bool_t
+xdr_uint64_t(XDR *xdrs, uint64_t *p)
+{
+    return xdr_u_hyper(xdrs, p);
+}
+
+XDR_API bool_t
+xdr_quad_t(XDR *xdrs, quad_t *p)
+{
+    return xdr_hyper(xdrs, p);
+}
+
+XDR_API bool_t
+xdr_u_quad_t(XDR *xdrs, u_quad_t *p)
+{
+    return xdr_u_hyper(xdrs, p);
+}
+
+#else /* !_MSC_VER */
+# pragma weak xdr_int8_t = xdr_char
+# pragma weak xdr_uint8_t = xdr_u_char
+# pragma weak xdr_int16_t = xdr_short
+# pragma weak xdr_uint16_t = xdr_u_short
+# pragma weak xdr_int32_t = xdr_int
+# pragma weak xdr_uint32_t = xdr_u_int
+# pragma weak xdr_int64_t = xdr_hyper
+# pragma weak xdr_uint64_t = xdr_u_hyper
+# pragma weak xdr_quad_t = xdr_hyper
+# pragma weak xdr_u_quad_t = xdr_u_hyper
+#endif /* !_MSC_VER */

@@ -356,7 +356,6 @@ XDR_API bool_t	xdr_pointer(XDR *, char **, u_int, const xdrproc_t);
 XDR_API void	xdr_free(xdrproc_t, char *);
 XDR_API bool_t	xdr_time_t(XDR *, time_t *);
 
-#if 0
 XDR_API bool_t	xdr_int8_t(XDR *, int8_t *);
 XDR_API bool_t	xdr_uint8_t(XDR *, uint8_t *);
 XDR_API bool_t	xdr_int16_t(XDR *, int16_t *);
@@ -365,18 +364,8 @@ XDR_API bool_t	xdr_int32_t(XDR *, int32_t *);
 XDR_API bool_t	xdr_uint32_t(XDR *, uint32_t *);
 XDR_API bool_t	xdr_int64_t(XDR *, int64_t *);
 XDR_API bool_t	xdr_uint64_t(XDR *, uint64_t *);
-#endif
-
-#define xdr_int8_t xdr_char
-#define xdr_uint8_t xdr_u_char
-#define xdr_int16_t xdr_short
-#define xdr_uint16_t xdr_u_short
-#define xdr_int32_t xdr_int
-#define xdr_uint32_t xdr_u_int
-#define xdr_int64_t xdr_hyper
-#define xdr_uint64_t xdr_u_hyper
-#define xdr_quad_t xdr_hyper
-#define xdr_u_quad_t xdr_u_hyper
+XDR_API bool_t	xdr_quad_t(XDR *, quad_t *);
+XDR_API bool_t	xdr_u_quad_t(XDR *, u_quad_t *);
 
 XDR_API bool_t	xdr_float(XDR *, float *);
 XDR_API bool_t	xdr_double(XDR *, double *);
