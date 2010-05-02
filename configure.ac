@@ -80,6 +80,14 @@ AH_BOTTOM([#endif /* !_RPC_LOCAL_H */])
 
 AC_CONFIG_FILES([Makefile
                  contrib/Makefile
+                 java/Makefile
+                 java/src/Makefile
+                 java/src/main/Makefile
+                 java/src/main/org/Makefile
+                 java/src/main/org/openxdr/Makefile
+                 java/src/test/Makefile
+                 java/src/test/org/Makefile
+                 java/src/test/org/openxdr/Makefile
                  rpc/Makefile
                  vc9/Makefile])
 AC_OUTPUT

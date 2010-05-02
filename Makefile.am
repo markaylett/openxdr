@@ -1,5 +1,6 @@
 SUBDIRS = \
 	contrib \
+	java \
 	rpc \
 	vc9
 

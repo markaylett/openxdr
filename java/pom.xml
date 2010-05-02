@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.openxdr</groupId>
+  <artifactId>openxdr</artifactId>
+  <packaging>jar</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>openxdr</name>
+  <url>http://maven.apache.org</url>
+  <description>OpenXDR</description>
+  <build>
+    <defaultGoal>package</defaultGoal>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.0.2</version>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.4</version>
+    </dependency>
+  </dependencies>
+  <developers>
+    <developer>
+      <name>Mark Aylett</name>
+      <id>marayl</id>
+      <email>mark.aylett@gmail.com</email>
+      <organization></organization>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>GNU General Public License Version 2</name>
+        <url>http://www.gnu.org/licenses/gpl.txt</url>
+        <distribution>repo</distribution>
+    </license>
+  </licenses>
+</project>
