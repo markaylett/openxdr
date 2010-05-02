@@ -7,6 +7,7 @@ EXTRA_DIST = \
 	HyperCodec.java \
 	IntCodec.java \
 	OpaqueCodec.java \
+	PointerCodec.java \
 	Slice.java \
 	StringCodec.java \
 	Utility.java
