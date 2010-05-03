@@ -1,25 +1,26 @@
 package org.openxdr;
 
-public final class Slice {
-    private final byte[] buf;
+public final class ArraySlice<T> {
+    private final T[] buf;
     private final int offset;
     private final int len;
 
-    public Slice(byte[] buf, int offset, int len) {
+    public ArraySlice(T[] buf, int offset, int len) {
         this.buf = buf;
         this.offset = offset;
         this.len = len;
     }
 
-    public Slice(byte[] buf) {
+    public ArraySlice(T[] buf) {
         this(buf, 0, buf.length);
     }
 
-    public Slice(int size) {
-        this(new byte[size]);
+    @SuppressWarnings("unchecked")
+    public ArraySlice(int size) {
+        this((T[]) new Object[size]);
     }
 
-    public final byte[] getBuffer() {
+    public final T[] getBuffer() {
         return buf;
     }
 

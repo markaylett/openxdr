@@ -74,13 +74,12 @@ final class Utility {
         buf.position(newPos);
     }
 
-    static byte[] decodeAlign(ByteBuffer buf, byte[] val, int offset, int len) {
+    static void decodeAlign(ByteBuffer buf, byte[] val, int offset, int len) {
         final int pos = buf.position();
         final int newPos = alignPos(pos + len);
         if (buf.limit() < newPos)
             throw new BufferUnderflowException();
         System.arraycopy(buf.array(), pos, val, offset, len);
         buf.position(newPos);
-        return val;
     }
 }

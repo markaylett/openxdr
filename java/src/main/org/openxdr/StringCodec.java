@@ -35,7 +35,7 @@ public class StringCodec implements Codec<CharBuffer> {
         return decodeString(buf, maxsize);
     }
 
-    static void encodeString(ByteBuffer buf, CharBuffer val, int maxsize)
+    public static void encodeString(ByteBuffer buf, CharBuffer val, int maxsize)
             throws CharacterCodingException {
         final int len = val.length();
         if (maxsize < len)
@@ -48,12 +48,12 @@ public class StringCodec implements Codec<CharBuffer> {
         encodeAlign(buf);
     }
 
-    static void encodeString(ByteBuffer buf, CharBuffer val)
+    public static void encodeString(ByteBuffer buf, CharBuffer val)
             throws CharacterCodingException {
         encodeString(buf, val, Integer.MAX_VALUE);
     }
 
-    static CharBuffer decodeString(ByteBuffer buf, int maxsize)
+    public static CharBuffer decodeString(ByteBuffer buf, int maxsize)
             throws CharacterCodingException {
         final int len = decodeInt(buf);
         if (maxsize < len)
@@ -67,7 +67,7 @@ public class StringCodec implements Codec<CharBuffer> {
         return (CharBuffer) val.flip();
     }
 
-    static CharBuffer decodeString(ByteBuffer buf)
+    public static CharBuffer decodeString(ByteBuffer buf)
             throws CharacterCodingException {
         return decodeString(buf, Integer.MAX_VALUE);
     }

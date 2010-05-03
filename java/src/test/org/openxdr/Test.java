@@ -2,8 +2,6 @@ package org.openxdr;
 
 import static org.openxdr.BoolCodec.decodeBool;
 import static org.openxdr.BoolCodec.encodeBool;
-import static org.openxdr.BytesCodec.decodeBytes;
-import static org.openxdr.BytesCodec.encodeBytes;
 import static org.openxdr.DoubleCodec.decodeDouble;
 import static org.openxdr.DoubleCodec.encodeDouble;
 import static org.openxdr.FloatCodec.decodeFloat;
@@ -16,6 +14,8 @@ import static org.openxdr.OpaqueCodec.decodeOpaque;
 import static org.openxdr.OpaqueCodec.encodeOpaque;
 import static org.openxdr.StringCodec.decodeString;
 import static org.openxdr.StringCodec.encodeString;
+import static org.openxdr.VarOpaqueCodec.decodeVarOpaque;
+import static org.openxdr.VarOpaqueCodec.encodeVarOpaque;
 
 import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
@@ -89,15 +89,16 @@ public final class Test extends TestCase {
         final ByteBuffer buf = newXdrBuffer(4);
         encodeOpaque(buf, "test".getBytes("UTF-8"));
         buf.flip();
-        assertEquals("test",
-                new String(decodeOpaque(buf, new byte[4]), "UTF-8"));
+        final byte[] out = new byte[4];
+        decodeOpaque(buf, out);
+        assertEquals("test", new String(out, "UTF-8"));
     }
 
-    public final void testBytes() throws UnsupportedEncodingException {
+    public final void testVarOpaque() throws UnsupportedEncodingException {
         final ByteBuffer buf = newXdrBuffer(8);
-        encodeBytes(buf, "test".getBytes("UTF-8"));
+        encodeVarOpaque(buf, "test".getBytes("UTF-8"));
         buf.flip();
-        assertEquals("test", new String(decodeBytes(buf), "UTF-8"));
+        assertEquals("test", new String(decodeVarOpaque(buf), "UTF-8"));
     }
 
     public final void testString() throws CharacterCodingException {
