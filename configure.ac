@@ -83,11 +83,13 @@ AC_CONFIG_FILES([Makefile
                  java/Makefile
                  java/src/Makefile
                  java/src/main/Makefile
-                 java/src/main/org/Makefile
-                 java/src/main/org/openxdr/Makefile
+                 java/src/main/java/Makefile
+                 java/src/main/java/org/Makefile
+                 java/src/main/java/org/openxdr/Makefile
                  java/src/test/Makefile
-                 java/src/test/org/Makefile
-                 java/src/test/org/openxdr/Makefile
+                 java/src/test/java/Makefile
+                 java/src/test/java/org/Makefile
+                 java/src/test/java/org/openxdr/Makefile
                  rpc/Makefile
                  vc9/Makefile])
 AC_OUTPUT

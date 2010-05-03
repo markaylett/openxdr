@@ -18,6 +18,11 @@
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
+          <excludes>
+            <exclude>**/Makefile</exclude>
+            <exclude>**/Makefile.am</exclude>
+            <exclude>**/Makefile.in</exclude>
+          </excludes>
         </configuration>
       </plugin>
     </plugins>
@@ -39,9 +44,9 @@
   </developers>
   <licenses>
     <license>
-      <name>GNU General Public License Version 2</name>
-        <url>http://www.gnu.org/licenses/gpl.txt</url>
-        <distribution>repo</distribution>
+      <name>CDDL</name>
+      <url>http://www.sun.com/cddl</url>
+      <distribution>repo</distribution>
     </license>
   </licenses>
 </project>

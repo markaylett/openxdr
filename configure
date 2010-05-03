@@ -15680,7 +15680,7 @@ done
 
 
 
-ac_config_files="$ac_config_files Makefile contrib/Makefile java/Makefile java/src/Makefile java/src/main/Makefile java/src/main/org/Makefile java/src/main/org/openxdr/Makefile java/src/test/Makefile java/src/test/org/Makefile java/src/test/org/openxdr/Makefile rpc/Makefile vc9/Makefile"
+ac_config_files="$ac_config_files Makefile contrib/Makefile java/Makefile java/src/Makefile java/src/main/Makefile java/src/main/java/Makefile java/src/main/java/org/Makefile java/src/main/java/org/openxdr/Makefile java/src/test/Makefile java/src/test/java/Makefile java/src/test/java/org/Makefile java/src/test/java/org/openxdr/Makefile rpc/Makefile vc9/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -16780,11 +16780,13 @@ do
     "java/Makefile") CONFIG_FILES="$CONFIG_FILES java/Makefile" ;;
     "java/src/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/Makefile" ;;
     "java/src/main/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/main/Makefile" ;;
-    "java/src/main/org/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/main/org/Makefile" ;;
-    "java/src/main/org/openxdr/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/main/org/openxdr/Makefile" ;;
+    "java/src/main/java/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/main/java/Makefile" ;;
+    "java/src/main/java/org/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/main/java/org/Makefile" ;;
+    "java/src/main/java/org/openxdr/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/main/java/org/openxdr/Makefile" ;;
     "java/src/test/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/test/Makefile" ;;
-    "java/src/test/org/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/test/org/Makefile" ;;
-    "java/src/test/org/openxdr/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/test/org/openxdr/Makefile" ;;
+    "java/src/test/java/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/test/java/Makefile" ;;
+    "java/src/test/java/org/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/test/java/org/Makefile" ;;
+    "java/src/test/java/org/openxdr/Makefile") CONFIG_FILES="$CONFIG_FILES java/src/test/java/org/openxdr/Makefile" ;;
     "rpc/Makefile") CONFIG_FILES="$CONFIG_FILES rpc/Makefile" ;;
     "vc9/Makefile") CONFIG_FILES="$CONFIG_FILES vc9/Makefile" ;;
 
