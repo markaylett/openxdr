@@ -17,10 +17,17 @@ import static org.openxdr.IntCodec.encodeInt;
 
 import java.nio.ByteBuffer;
 
-public final class BoolCodec implements Codec<Boolean> {
-    private static final BoolCodec instance = new BoolCodec();
+final class BoolCodec implements Codec<Boolean> {
 
-    private BoolCodec() {
+    BoolCodec() {
+    }
+
+    static void encodeBool(ByteBuffer buf, boolean val) {
+        encodeInt(buf, val ? 1 : 0);
+    }
+
+    static boolean decodeBool(ByteBuffer buf) {
+        return 0 != decodeInt(buf);
     }
 
     public final void encode(ByteBuffer buf, Boolean val) {
@@ -29,17 +36,5 @@ public final class BoolCodec implements Codec<Boolean> {
 
     public final Boolean decode(ByteBuffer buf) {
         return decodeBool(buf);
-    }
-
-    public static BoolCodec getInstance() {
-        return instance;
-    }
-
-    public static void encodeBool(ByteBuffer buf, boolean val) {
-        encodeInt(buf, val ? 1 : 0);
-    }
-
-    public static boolean decodeBool(ByteBuffer buf) {
-        return 0 != decodeInt(buf);
     }
 }

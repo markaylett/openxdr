@@ -3,6 +3,7 @@ EXTRA_DIST = \
 	ArraySlice.java \
 	BoolCodec.java \
 	Codec.java \
+	Codecs.java \
 	DoubleCodec.java \
 	FloatCodec.java \
 	HyperCodec.java \

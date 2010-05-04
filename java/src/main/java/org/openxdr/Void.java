@@ -13,12 +13,9 @@
 package org.openxdr;
 
 public final class Void {
-    private static final Void instance = new Void();
 
     private Void() {
     }
 
-    public static Void getInstance() {
-        return instance;
-    }
+    public static final Void VALUE = new Void();
 }

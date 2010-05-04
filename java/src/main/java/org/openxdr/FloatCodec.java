@@ -15,10 +15,19 @@ package org.openxdr;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public final class FloatCodec implements Codec<Float> {
-    private static final FloatCodec instance = new FloatCodec();
+final class FloatCodec implements Codec<Float> {
 
-    private FloatCodec() {
+    FloatCodec() {
+    }
+
+    static void encodeFloat(ByteBuffer buf, float val) {
+        assert ByteOrder.BIG_ENDIAN == buf.order();
+        buf.putFloat(val);
+    }
+
+    static float decodeFloat(ByteBuffer buf) {
+        assert ByteOrder.BIG_ENDIAN == buf.order();
+        return buf.getFloat();
     }
 
     public final void encode(ByteBuffer buf, Float val) {
@@ -27,19 +36,5 @@ public final class FloatCodec implements Codec<Float> {
 
     public final Float decode(ByteBuffer buf) {
         return decodeFloat(buf);
-    }
-
-    public static FloatCodec getInstance() {
-        return instance;
-    }
-
-    public static void encodeFloat(ByteBuffer buf, float val) {
-        assert ByteOrder.BIG_ENDIAN == buf.order();
-        buf.putFloat(val);
-    }
-
-    public static float decodeFloat(ByteBuffer buf) {
-        assert ByteOrder.BIG_ENDIAN == buf.order();
-        return buf.getFloat();
     }
 }

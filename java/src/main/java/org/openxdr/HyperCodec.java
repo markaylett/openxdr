@@ -15,10 +15,19 @@ package org.openxdr;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public final class HyperCodec implements Codec<Long> {
-    private static final HyperCodec instance = new HyperCodec();
+final class HyperCodec implements Codec<Long> {
 
-    private HyperCodec() {
+    HyperCodec() {
+    }
+
+    static void encodeHyper(ByteBuffer buf, long val) {
+        assert ByteOrder.BIG_ENDIAN == buf.order();
+        buf.putLong(val);
+    }
+
+    static long decodeHyper(ByteBuffer buf) {
+        assert ByteOrder.BIG_ENDIAN == buf.order();
+        return buf.getLong();
     }
 
     public final void encode(ByteBuffer buf, Long val) {
@@ -27,19 +36,5 @@ public final class HyperCodec implements Codec<Long> {
 
     public final Long decode(ByteBuffer buf) {
         return decodeHyper(buf);
-    }
-
-    public static HyperCodec getInstance() {
-        return instance;
-    }
-
-    public static void encodeHyper(ByteBuffer buf, long val) {
-        assert ByteOrder.BIG_ENDIAN == buf.order();
-        buf.putLong(val);
-    }
-
-    public static long decodeHyper(ByteBuffer buf) {
-        assert ByteOrder.BIG_ENDIAN == buf.order();
-        return buf.getLong();
     }
 }

@@ -17,12 +17,27 @@ import static org.openxdr.Utility.encodeAlign;
 
 import java.nio.ByteBuffer;
 
-public final class OpaqueCodec implements Codec<OpaqueSlice> {
+final class OpaqueCodec implements Codec<OpaqueSlice> {
     private final int size;
 
-    public OpaqueCodec(int size) {
+    OpaqueCodec(int size) {
         this.size = size;
+    }
 
+    static void encodeOpaque(ByteBuffer buf, byte[] val, int offset, int len) {
+        encodeAlign(buf, val, offset, len);
+    }
+
+    static void encodeOpaque(ByteBuffer buf, byte[] val) {
+        encodeOpaque(buf, val, 0, val.length);
+    }
+
+    static void decodeOpaque(ByteBuffer buf, byte[] val, int offset, int len) {
+        decodeAlign(buf, val, offset, len);
+    }
+
+    static void decodeOpaque(ByteBuffer buf, byte[] val) {
+        decodeOpaque(buf, val, 0, val.length);
     }
 
     public final void encode(ByteBuffer buf, OpaqueSlice val) {
@@ -35,23 +50,5 @@ public final class OpaqueCodec implements Codec<OpaqueSlice> {
         final OpaqueSlice val = new OpaqueSlice(size);
         decodeOpaque(buf, val.getBuffer(), val.getOffset(), val.getLength());
         return val;
-    }
-
-    public static void encodeOpaque(ByteBuffer buf, byte[] val, int offset,
-            int len) {
-        encodeAlign(buf, val, offset, len);
-    }
-
-    public static void encodeOpaque(ByteBuffer buf, byte[] val) {
-        encodeOpaque(buf, val, 0, val.length);
-    }
-
-    public static void decodeOpaque(ByteBuffer buf, byte[] val, int offset,
-            int len) {
-        decodeAlign(buf, val, offset, len);
-    }
-
-    public static void decodeOpaque(ByteBuffer buf, byte[] val) {
-        decodeOpaque(buf, val, 0, val.length);
     }
 }
