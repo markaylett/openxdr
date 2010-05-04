@@ -40,12 +40,9 @@ import java.nio.charset.CharacterCodingException;
 import junit.framework.TestCase;
 
 public final class Test extends TestCase {
-    private static ByteBuffer newXdrBuffer(int capacity) {
-        return XdrBuffer.allocate(capacity);
-    }
 
     public static void main(String[] args) throws Exception {
-        final ByteBuffer buf = newXdrBuffer(1024);
+        final ByteBuffer buf = XdrBuffer.allocate(1024);
         final FileInputStream is = new FileInputStream(
                 "u:/src/c/xdrtest/test1.out");
         try {
@@ -61,42 +58,42 @@ public final class Test extends TestCase {
     }
 
     public final void testInt() {
-        final ByteBuffer buf = newXdrBuffer(4);
+        final ByteBuffer buf = XdrBuffer.allocate(4);
         encodeInt(buf, Integer.MIN_VALUE);
         buf.flip();
         assertEquals(Integer.MIN_VALUE, decodeInt(buf));
     }
 
     public final void testBool() {
-        final ByteBuffer buf = newXdrBuffer(4);
+        final ByteBuffer buf = XdrBuffer.allocate(4);
         encodeBool(buf, true);
         buf.flip();
         assertEquals(true, decodeBool(buf));
     }
 
     public final void testHyper() {
-        final ByteBuffer buf = newXdrBuffer(8);
+        final ByteBuffer buf = XdrBuffer.allocate(8);
         encodeHyper(buf, Long.MIN_VALUE);
         buf.flip();
         assertEquals(Long.MIN_VALUE, decodeHyper(buf));
     }
 
     public final void testFloat() {
-        final ByteBuffer buf = newXdrBuffer(4);
+        final ByteBuffer buf = XdrBuffer.allocate(4);
         encodeFloat(buf, Float.MIN_VALUE);
         buf.flip();
         assertEquals(Float.MIN_VALUE, decodeFloat(buf));
     }
 
     public final void testDouble() {
-        final ByteBuffer buf = newXdrBuffer(8);
+        final ByteBuffer buf = XdrBuffer.allocate(8);
         encodeDouble(buf, Double.MIN_VALUE);
         buf.flip();
         assertEquals(Double.MIN_VALUE, decodeDouble(buf));
     }
 
     public final void testOpaque() throws UnsupportedEncodingException {
-        final ByteBuffer buf = newXdrBuffer(4);
+        final ByteBuffer buf = XdrBuffer.allocate(4);
         encodeOpaque(buf, "test".getBytes("UTF-8"));
         buf.flip();
         final byte[] out = new byte[4];
@@ -105,14 +102,14 @@ public final class Test extends TestCase {
     }
 
     public final void testVarOpaque() throws UnsupportedEncodingException {
-        final ByteBuffer buf = newXdrBuffer(8);
+        final ByteBuffer buf = XdrBuffer.allocate(8);
         encodeVarOpaque(buf, "test".getBytes("UTF-8"));
         buf.flip();
         assertEquals("test", new String(decodeVarOpaque(buf), "UTF-8"));
     }
 
     public final void testString() throws CharacterCodingException {
-        final ByteBuffer buf = newXdrBuffer(8);
+        final ByteBuffer buf = XdrBuffer.allocate(8);
         encodeString(buf, CharBuffer.wrap("test"));
         buf.flip();
         assertEquals("test", decodeString(buf).toString());

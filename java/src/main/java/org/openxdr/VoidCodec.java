@@ -13,20 +13,21 @@
  */
 package org.openxdr;
 
-public final class Union {
-    private final int type;
-    private final Object value;
+import java.nio.ByteBuffer;
 
-    public Union(int type, Object value) {
-        this.type = type;
-        this.value = value;
+public class VoidCodec implements Codec<Void> {
+    public final void encode(ByteBuffer buf, Void val) {
+        encodeVoid(buf, val);
     }
 
-    public final int getType() {
-        return type;
+    public final Void decode(ByteBuffer buf) {
+        return decodeVoid(buf);
     }
 
-    public final Object getValue() {
-        return value;
+    public static void encodeVoid(ByteBuffer buf, Void val) {
+    }
+
+    public static Void decodeVoid(ByteBuffer buf) {
+        return Void.getInstance();
     }
 }

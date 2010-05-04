@@ -74,7 +74,7 @@ public class StringCodec implements Codec<CharBuffer> {
         final CharBuffer val = CharBuffer.allocate(len);
         final CharsetDecoder decoder = getUtf8Decoder();
         final CoderResult result = decoder.decode(buf, val, true);
-        if (!result.isUnderflow())
+        if (0 != val.remaining())
             result.throwException();
         decodeAlign(buf);
         return (CharBuffer) val.flip();

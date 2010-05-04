@@ -16,4 +16,6 @@ EXTRA_DIST = \
 	Utility.java \
 	VarArrayCodec.java \
 	VarOpaqueCodec.java \
+	Void.java \
+	VoidCodec.java \
 	XdrBuffer.java
