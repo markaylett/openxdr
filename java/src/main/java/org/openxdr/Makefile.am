@@ -11,6 +11,9 @@ EXTRA_DIST = \
 	OpaqueSlice.java \
 	OptionalCodec.java \
 	StringCodec.java \
+	Union.java \
+	UnionCodec.java \
 	Utility.java \
 	VarArrayCodec.java \
-	VarOpaqueCodec.java
+	VarOpaqueCodec.java \
+	XdrBuffer.java

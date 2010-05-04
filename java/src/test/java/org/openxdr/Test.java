@@ -33,7 +33,6 @@ import static org.openxdr.VarOpaqueCodec.encodeVarOpaque;
 import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.CharacterCodingException;
@@ -42,9 +41,7 @@ import junit.framework.TestCase;
 
 public final class Test extends TestCase {
     private static ByteBuffer newXdrBuffer(int capacity) {
-        final ByteBuffer buf = ByteBuffer.allocate(capacity);
-        buf.order(ByteOrder.BIG_ENDIAN);
-        return buf;
+        return XdrBuffer.allocate(capacity);
     }
 
     public static void main(String[] args) throws Exception {

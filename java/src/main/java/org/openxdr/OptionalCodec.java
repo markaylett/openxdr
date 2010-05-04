@@ -19,7 +19,7 @@ import static org.openxdr.BoolCodec.encodeBool;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
 
-public class OptionalCodec<T> implements Codec<T> {
+public final class OptionalCodec<T> implements Codec<T> {
     private final Codec<T> codec;
 
     public OptionalCodec(Codec<T> codec) {
