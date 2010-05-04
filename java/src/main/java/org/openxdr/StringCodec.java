@@ -27,15 +27,16 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
 
-public class StringCodec implements Codec<CharBuffer> {
+public final class StringCodec implements Codec<CharBuffer> {
+    private static final StringCodec instance = new StringCodec();
     private final int maxsize;
+
+    private StringCodec() {
+        maxsize = Integer.MAX_VALUE;
+    }
 
     public StringCodec(int maxsize) {
         this.maxsize = maxsize;
-    }
-
-    public StringCodec() {
-        maxsize = Integer.MAX_VALUE;
     }
 
     public final void encode(ByteBuffer buf, CharBuffer val)
@@ -46,6 +47,10 @@ public class StringCodec implements Codec<CharBuffer> {
     public final CharBuffer decode(ByteBuffer buf)
             throws CharacterCodingException {
         return decodeString(buf, maxsize);
+    }
+
+    public static StringCodec getInstance() {
+        return instance;
     }
 
     public static void encodeString(ByteBuffer buf, CharBuffer val, int maxsize)
@@ -66,6 +71,14 @@ public class StringCodec implements Codec<CharBuffer> {
         encodeString(buf, val, Integer.MAX_VALUE);
     }
 
+    public static void encodeString(ByteBuffer buf, String val, int maxsize)
+    throws CharacterCodingException {
+        encodeString(buf, CharBuffer.wrap(val), maxsize);
+    }
+    public static void encodeString(ByteBuffer buf, String val)
+    throws CharacterCodingException {
+        encodeString(buf, CharBuffer.wrap(val));
+    }
     public static CharBuffer decodeString(ByteBuffer buf, int maxsize)
             throws CharacterCodingException {
         final int len = decodeInt(buf);
