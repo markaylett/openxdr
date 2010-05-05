@@ -12,25 +12,6 @@
  */
 package org.openxdr;
 
-import static org.openxdr.BoolCodec.decodeBool;
-import static org.openxdr.BoolCodec.encodeBool;
-import static org.openxdr.DoubleCodec.decodeDouble;
-import static org.openxdr.DoubleCodec.encodeDouble;
-import static org.openxdr.FloatCodec.decodeFloat;
-import static org.openxdr.FloatCodec.encodeFloat;
-import static org.openxdr.HyperCodec.decodeHyper;
-import static org.openxdr.HyperCodec.encodeHyper;
-import static org.openxdr.IntCodec.decodeInt;
-import static org.openxdr.IntCodec.encodeInt;
-import static org.openxdr.OpaqueCodec.decodeOpaque;
-import static org.openxdr.OpaqueCodec.encodeOpaque;
-import static org.openxdr.OptionalCodec.decodeOptional;
-import static org.openxdr.OptionalCodec.encodeOptional;
-import static org.openxdr.StringCodec.decodeString;
-import static org.openxdr.StringCodec.encodeString;
-import static org.openxdr.VarOpaqueCodec.decodeVarOpaque;
-import static org.openxdr.VarOpaqueCodec.encodeVarOpaque;
-
 import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -49,15 +30,15 @@ final class StringEntryCodec implements Codec<StringEntry> {
 
     public final void encode(ByteBuffer buf, StringEntry val)
             throws CharacterCodingException {
-        encodeString(buf, CharBuffer.wrap(val.item));
-        encodeOptional(buf, val.next, this);
+        XdrString.encode(buf, CharBuffer.wrap(val.item));
+        XdrOptional.encode(buf, val.next, this);
     }
 
     public final StringEntry decode(ByteBuffer buf)
             throws CharacterCodingException {
         final StringEntry val = new StringEntry();
-        val.item = decodeString(buf).toString();
-        val.next = decodeOptional(buf, this);
+        val.item = XdrString.decode(buf).toString();
+        val.next = XdrOptional.decode(buf, this);
         return val;
     }
 }
@@ -77,12 +58,12 @@ final class StringListCodec implements Codec<StringEntry> {
 
     public static void encodeStringList(ByteBuffer buf, StringEntry val)
             throws CharacterCodingException {
-        encodeOptional(buf, val.next, CODEC);
+        XdrOptional.encode(buf, val.next, CODEC);
     }
 
     public static StringEntry decodeStringList(ByteBuffer buf)
             throws CharacterCodingException {
-        return decodeOptional(buf, CODEC);
+        return XdrOptional.decode(buf, CODEC);
     }
 }
 
@@ -106,59 +87,59 @@ public final class Test extends TestCase {
 
     public final void testInt() {
         final ByteBuffer buf = XdrBuffer.allocate(4);
-        encodeInt(buf, Integer.MIN_VALUE);
+        XdrInt.encode(buf, Integer.MIN_VALUE);
         buf.flip();
-        assertEquals(Integer.MIN_VALUE, decodeInt(buf));
+        assertEquals(Integer.MIN_VALUE, XdrInt.decode(buf));
     }
 
     public final void testBool() {
         final ByteBuffer buf = XdrBuffer.allocate(4);
-        encodeBool(buf, true);
+        XdrBool.encode(buf, true);
         buf.flip();
-        assertEquals(true, decodeBool(buf));
+        assertEquals(true, XdrBool.decode(buf));
     }
 
     public final void testHyper() {
         final ByteBuffer buf = XdrBuffer.allocate(8);
-        encodeHyper(buf, Long.MIN_VALUE);
+        XdrHyper.encode(buf, Long.MIN_VALUE);
         buf.flip();
-        assertEquals(Long.MIN_VALUE, decodeHyper(buf));
+        assertEquals(Long.MIN_VALUE, XdrHyper.decode(buf));
     }
 
     public final void testFloat() {
         final ByteBuffer buf = XdrBuffer.allocate(4);
-        encodeFloat(buf, Float.MIN_VALUE);
+        XdrFloat.encode(buf, Float.MIN_VALUE);
         buf.flip();
-        assertEquals(Float.MIN_VALUE, decodeFloat(buf));
+        assertEquals(Float.MIN_VALUE, XdrFloat.decode(buf));
     }
 
     public final void testDouble() {
         final ByteBuffer buf = XdrBuffer.allocate(8);
-        encodeDouble(buf, Double.MIN_VALUE);
+        XdrDouble.encode(buf, Double.MIN_VALUE);
         buf.flip();
-        assertEquals(Double.MIN_VALUE, decodeDouble(buf));
+        assertEquals(Double.MIN_VALUE, XdrDouble.decode(buf));
     }
 
     public final void testOpaque() throws UnsupportedEncodingException {
         final ByteBuffer buf = XdrBuffer.allocate(4);
-        encodeOpaque(buf, "test".getBytes("UTF-8"));
+        XdrOpaque.encode(buf, "test".getBytes("UTF-8"));
         buf.flip();
         final byte[] out = new byte[4];
-        decodeOpaque(buf, out);
+        XdrOpaque.decode(buf, out);
         assertEquals("test", new String(out, "UTF-8"));
     }
 
     public final void testVarOpaque() throws UnsupportedEncodingException {
         final ByteBuffer buf = XdrBuffer.allocate(8);
-        encodeVarOpaque(buf, "test".getBytes("UTF-8"));
+        XdrOpaque.encodeVar(buf, "test".getBytes("UTF-8"));
         buf.flip();
-        assertEquals("test", new String(decodeVarOpaque(buf), "UTF-8"));
+        assertEquals("test", new String(XdrOpaque.decodeVar(buf), "UTF-8"));
     }
 
     public final void testString() throws CharacterCodingException {
         final ByteBuffer buf = XdrBuffer.allocate(8);
-        encodeString(buf, CharBuffer.wrap("test"));
+        XdrString.encode(buf, CharBuffer.wrap("test"));
         buf.flip();
-        assertEquals("test", decodeString(buf).toString());
+        assertEquals("test", XdrString.decode(buf).toString());
     }
 }

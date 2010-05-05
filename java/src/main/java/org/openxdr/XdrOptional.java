@@ -12,42 +12,42 @@
  */
 package org.openxdr;
 
-import static org.openxdr.BoolCodec.decodeBool;
-import static org.openxdr.BoolCodec.encodeBool;
-
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
 
-final class OptionalCodec<T> implements Codec<T> {
-    private final Codec<T> codec;
+public final class XdrOptional {
 
-    OptionalCodec(Codec<T> codec) {
-        this.codec = codec;
+    private XdrOptional() {
     }
 
-    static <T> void encodeOptional(ByteBuffer buf, T val, Codec<T> codec)
+    public static <T> void encode(ByteBuffer buf, T val, Codec<T> codec)
             throws CharacterCodingException {
         if (null != val) {
-            encodeBool(buf, true);
+            XdrBool.encode(buf, true);
             codec.encode(buf, val);
         } else
-            encodeBool(buf, false);
+            XdrBool.encode(buf, false);
     }
 
-    static <T> T decodeOptional(ByteBuffer buf, Codec<T> codec)
+    public static <T> T decode(ByteBuffer buf, Codec<T> codec)
             throws CharacterCodingException {
         T val = null;
-        if (decodeBool(buf))
+        if (XdrBool.decode(buf))
             val = codec.decode(buf);
         return val;
     }
 
-    public final void encode(ByteBuffer buf, T val)
-            throws CharacterCodingException {
-        encodeOptional(buf, val, codec);
-    }
+    public static <T> Codec<T> newCodec(final Codec<T> codec) {
+        return new Codec<T>() {
+            public final void encode(ByteBuffer buf, T val)
+                    throws CharacterCodingException {
+                XdrOptional.encode(buf, val, codec);
+            }
 
-    public final T decode(ByteBuffer buf) throws CharacterCodingException {
-        return decodeOptional(buf, codec);
+            public final T decode(ByteBuffer buf)
+                    throws CharacterCodingException {
+                return XdrOptional.decode(buf, codec);
+            }
+        };
     }
 }

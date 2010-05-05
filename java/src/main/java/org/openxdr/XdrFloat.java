@@ -15,26 +15,28 @@ package org.openxdr;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-final class IntCodec implements Codec<Integer> {
+public final class XdrFloat {
 
-    IntCodec() {
+    private XdrFloat() {
     }
 
-    static void encodeInt(ByteBuffer buf, int val) {
+    public static void encode(ByteBuffer buf, float val) {
         assert ByteOrder.BIG_ENDIAN == buf.order();
-        buf.putInt(val);
+        buf.putFloat(val);
     }
 
-    static int decodeInt(ByteBuffer buf) {
+    public static float decode(ByteBuffer buf) {
         assert ByteOrder.BIG_ENDIAN == buf.order();
-        return buf.getInt();
+        return buf.getFloat();
     }
 
-    public final void encode(ByteBuffer buf, Integer val) {
-        encodeInt(buf, val);
-    }
+    public static final Codec<Float> CODEC = new Codec<Float>() {
+        public final void encode(ByteBuffer buf, Float val) {
+            XdrFloat.encode(buf, val);
+        }
 
-    public final Integer decode(ByteBuffer buf) {
-        return decodeInt(buf);
-    }
+        public final Float decode(ByteBuffer buf) {
+            return XdrFloat.decode(buf);
+        }
+    };
 }

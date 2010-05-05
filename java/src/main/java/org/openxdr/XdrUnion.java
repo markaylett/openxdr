@@ -12,16 +12,11 @@
  */
 package org.openxdr;
 
-import static org.openxdr.IntCodec.decodeInt;
-import static org.openxdr.IntCodec.encodeInt;
-
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.util.Map;
 
-final class UnionCodec implements Codec<Union> {
-    private final Map<Integer, Codec<?>> cases;
-    private final Codec<?> def;
+public final class XdrUnion {
 
     private static Codec<?> getCodec(int type, Map<Integer, Codec<?>> cases,
             Codec<?> def) {
@@ -34,48 +29,52 @@ final class UnionCodec implements Codec<Union> {
         return codec;
     }
 
-    UnionCodec(Map<Integer, Codec<?>> cases, Codec<?> def) {
-        this.cases = cases;
-        this.def = def;
-    }
-
-    UnionCodec(final Map<Integer, Codec<?>> cases) {
-        this(cases, null);
+    private XdrUnion() {
     }
 
     @SuppressWarnings("unchecked")
-    static void encodeUnion(ByteBuffer buf, Union val,
+    public static void encode(ByteBuffer buf, Union val,
             Map<Integer, Codec<?>> cases, Codec<?> def)
             throws CharacterCodingException {
         final Codec codec = getCodec(val.getType(), cases, def);
-        encodeInt(buf, val.getType());
+        XdrInt.encode(buf, val.getType());
         codec.encode(buf, val.getValue());
     }
 
-    static void encodeUnion(ByteBuffer buf, Union val,
+    public static void encode(ByteBuffer buf, Union val,
             Map<Integer, Codec<?>> cases) throws CharacterCodingException {
-        encodeUnion(buf, val, cases, null);
+        encode(buf, val, cases, null);
     }
 
     @SuppressWarnings("unchecked")
-    static Union decodeUnion(ByteBuffer buf, Map<Integer, Codec<?>> cases,
+    public static Union decode(ByteBuffer buf, Map<Integer, Codec<?>> cases,
             Codec<?> def) throws CharacterCodingException {
-        final int type = decodeInt(buf);
+        final int type = XdrInt.decode(buf);
         final Codec codec = getCodec(type, cases, def);
         return new Union(type, codec.decode(buf));
     }
 
-    static Union decodeUnion(ByteBuffer buf, Map<Integer, Codec<?>> cases)
+    public static Union decode(ByteBuffer buf, Map<Integer, Codec<?>> cases)
             throws CharacterCodingException {
-        return decodeUnion(buf, cases, null);
+        return decode(buf, cases, null);
     }
 
-    public final void encode(ByteBuffer buf, Union val)
-            throws CharacterCodingException {
-        encodeUnion(buf, val, cases, def);
+    public static Codec<Union> newCodec(final Map<Integer, Codec<?>> cases,
+            final Codec<?> def) {
+        return new Codec<Union>() {
+            public final void encode(ByteBuffer buf, Union val)
+                    throws CharacterCodingException {
+                XdrUnion.encode(buf, val, cases, def);
+            }
+
+            public final Union decode(ByteBuffer buf)
+                    throws CharacterCodingException {
+                return XdrUnion.decode(buf, cases, def);
+            }
+        };
     }
 
-    public final Union decode(ByteBuffer buf) throws CharacterCodingException {
-        return decodeUnion(buf, cases, def);
+    public static Codec<Union> newCodec(Map<Integer, Codec<?>> cases) {
+        return newCodec(cases, null);
     }
 }

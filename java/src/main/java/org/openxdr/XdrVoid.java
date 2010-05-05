@@ -14,23 +14,25 @@ package org.openxdr;
 
 import java.nio.ByteBuffer;
 
-final class VoidCodec implements Codec<Void> {
+public final class XdrVoid {
 
-    VoidCodec() {
+    private XdrVoid() {
     }
 
-    static void encodeVoid(ByteBuffer buf, Void val) {
+    public static void encode(ByteBuffer buf, Void val) {
     }
 
-    static Void decodeVoid(ByteBuffer buf) {
+    public static Void decode(ByteBuffer buf) {
         return Void.VALUE;
     }
 
-    public final void encode(ByteBuffer buf, Void val) {
-        encodeVoid(buf, val);
-    }
+    public static final Codec<Void> CODEC = new Codec<Void>() {
+        public final void encode(ByteBuffer buf, Void val) {
+            XdrVoid.encode(buf, val);
+        }
 
-    public final Void decode(ByteBuffer buf) {
-        return decodeVoid(buf);
-    }
+        public final Void decode(ByteBuffer buf) {
+            return XdrVoid.decode(buf);
+        }
+    };
 }

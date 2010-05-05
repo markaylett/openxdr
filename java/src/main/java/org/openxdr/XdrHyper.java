@@ -12,29 +12,31 @@
  */
 package org.openxdr;
 
-import static org.openxdr.IntCodec.decodeInt;
-import static org.openxdr.IntCodec.encodeInt;
-
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
-final class BoolCodec implements Codec<Boolean> {
+final class XdrHyper {
 
-    BoolCodec() {
+    private XdrHyper() {
     }
 
-    static void encodeBool(ByteBuffer buf, boolean val) {
-        encodeInt(buf, val ? 1 : 0);
+    public static void encode(ByteBuffer buf, long val) {
+        assert ByteOrder.BIG_ENDIAN == buf.order();
+        buf.putLong(val);
     }
 
-    static boolean decodeBool(ByteBuffer buf) {
-        return 0 != decodeInt(buf);
+    public static long decode(ByteBuffer buf) {
+        assert ByteOrder.BIG_ENDIAN == buf.order();
+        return buf.getLong();
     }
 
-    public final void encode(ByteBuffer buf, Boolean val) {
-        encodeBool(buf, val);
-    }
+    public static final Codec<Long> CODEC = new Codec<Long>() {
+        public final void encode(ByteBuffer buf, Long val) {
+            XdrHyper.encode(buf, val);
+        }
 
-    public final Boolean decode(ByteBuffer buf) {
-        return decodeBool(buf);
-    }
+        public final Long decode(ByteBuffer buf) {
+            return XdrHyper.decode(buf);
+        }
+    };
 }

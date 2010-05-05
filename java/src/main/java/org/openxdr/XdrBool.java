@@ -13,28 +13,27 @@
 package org.openxdr;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
-final class HyperCodec implements Codec<Long> {
+public final class XdrBool {
 
-    HyperCodec() {
+    private XdrBool() {
     }
 
-    static void encodeHyper(ByteBuffer buf, long val) {
-        assert ByteOrder.BIG_ENDIAN == buf.order();
-        buf.putLong(val);
+    public static void encode(ByteBuffer buf, boolean val) {
+        XdrInt.encode(buf, val ? 1 : 0);
     }
 
-    static long decodeHyper(ByteBuffer buf) {
-        assert ByteOrder.BIG_ENDIAN == buf.order();
-        return buf.getLong();
+    public static boolean decode(ByteBuffer buf) {
+        return 0 != XdrInt.decode(buf);
     }
 
-    public final void encode(ByteBuffer buf, Long val) {
-        encodeHyper(buf, val);
-    }
+    public static final Codec<Boolean> CODEC = new Codec<Boolean>() {
+        public final void encode(ByteBuffer buf, Boolean val) {
+            XdrBool.encode(buf, val);
+        }
 
-    public final Long decode(ByteBuffer buf) {
-        return decodeHyper(buf);
-    }
+        public final Boolean decode(ByteBuffer buf) {
+            return XdrBool.decode(buf);
+        }
+    };
 }

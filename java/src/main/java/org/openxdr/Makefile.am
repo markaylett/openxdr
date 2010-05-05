@@ -1,22 +1,19 @@
 EXTRA_DIST = \
-	ArrayCodec.java \
 	ArraySlice.java \
-	BoolCodec.java \
 	Codec.java \
-	Codecs.java \
-	DoubleCodec.java \
-	FloatCodec.java \
-	HyperCodec.java \
-	IntCodec.java \
-	OpaqueCodec.java \
 	OpaqueSlice.java \
-	OptionalCodec.java \
-	StringCodec.java \
 	Union.java \
-	UnionCodec.java \
 	Utility.java \
-	VarArrayCodec.java \
-	VarOpaqueCodec.java \
 	Void.java \
-	VoidCodec.java \
-	XdrBuffer.java
+	XdrArray.java \
+	XdrBool.java \
+	XdrBuffer.java \
+	XdrDouble.java \
+	XdrFloat.java \
+	XdrHyper.java \
+	XdrInt.java \
+	XdrOpaque.java \
+	XdrOptional.java \
+	XdrString.java \
+	XdrUnion.java \
+	XdrVoid.java
