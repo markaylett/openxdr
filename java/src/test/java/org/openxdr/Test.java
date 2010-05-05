@@ -21,50 +21,80 @@ import java.nio.charset.CharacterCodingException;
 
 import junit.framework.TestCase;
 
-final class StringEntry {
-    public String item;
-    public StringEntry next;
-}
+final class Xdr {
 
-final class StringEntryCodec implements Codec<StringEntry> {
+    interface StringEntry {
+        String getItem();
 
-    public final void encode(ByteBuffer buf, StringEntry val)
-            throws CharacterCodingException {
-        XdrString.encode(buf, CharBuffer.wrap(val.item));
-        XdrOptional.encode(buf, val.next, this);
+        StringEntry getNext();
     }
 
-    public final StringEntry decode(ByteBuffer buf)
-            throws CharacterCodingException {
-        final StringEntry val = new StringEntry();
-        val.item = XdrString.decode(buf).toString();
-        val.next = XdrOptional.decode(buf, this);
-        return val;
-    }
-}
+    static final Codec<StringEntry> STRING_ENTRY = new Codec<StringEntry>() {
 
-final class StringListCodec implements Codec<StringEntry> {
-    private static final StringEntryCodec CODEC = new StringEntryCodec();
+        public final void encode(ByteBuffer buf, StringEntry val)
+                throws CharacterCodingException {
+            XdrString.encode(buf, val.getItem());
+            XdrOptional.encode(buf, val.getNext(), this);
+        }
 
-    public final void encode(ByteBuffer buf, StringEntry val)
-            throws CharacterCodingException {
-        encodeStringList(buf, val);
+        public final StringEntry decode(ByteBuffer buf)
+                throws CharacterCodingException {
+            final String item = XdrString.decode(buf).toString();
+            final StringEntry next = XdrOptional.decode(buf, this);
+            return new StringEntry() {
+                public final String getItem() {
+                    return item;
+                }
+
+                public final StringEntry getNext() {
+                    return next;
+                }
+            };
+        }
+    };
+
+    static final Codec<StringEntry> STRING_LIST = new Codec<StringEntry>() {
+
+        public final void encode(ByteBuffer buf, StringEntry val)
+                throws CharacterCodingException {
+            XdrOptional.encode(buf, val, STRING_ENTRY);
+        }
+
+        public final StringEntry decode(ByteBuffer buf)
+                throws CharacterCodingException {
+            return XdrOptional.decode(buf, STRING_ENTRY);
+        }
+    };
+
+    interface Error2 {
+        Long getSubcode();
+
+        String getMessage();
     }
 
-    public final StringEntry decode(ByteBuffer buf)
-            throws CharacterCodingException {
-        return decodeStringList(buf);
-    }
+    static final Codec<Error2> ERROR2 = new Codec<Error2>() {
 
-    public static void encodeStringList(ByteBuffer buf, StringEntry val)
-            throws CharacterCodingException {
-        XdrOptional.encode(buf, val.next, CODEC);
-    }
+        public final void encode(ByteBuffer buf, Error2 val)
+                throws CharacterCodingException {
+            XdrHyper.encode(buf, val.getSubcode());
+            XdrString.encode(buf, val.getMessage());
+        }
 
-    public static StringEntry decodeStringList(ByteBuffer buf)
-            throws CharacterCodingException {
-        return XdrOptional.decode(buf, CODEC);
-    }
+        public final Error2 decode(ByteBuffer buf)
+                throws CharacterCodingException {
+            final Long subcode = XdrHyper.decode(buf);
+            final String message = XdrString.decode(buf).toString();
+            return new Error2() {
+                public final Long getSubcode() {
+                    return subcode;
+                }
+
+                public final String getMessage() {
+                    return message;
+                }
+            };
+        }
+    };
 }
 
 public final class Test extends TestCase {
@@ -78,8 +108,8 @@ public final class Test extends TestCase {
             final int n = fc.read(buf);
             System.out.println(n);
             buf.flip();
-            final StringEntry entry = StringListCodec.decodeStringList(buf);
-            System.out.println(entry.item);
+            final Xdr.StringEntry entry = Xdr.STRING_LIST.decode(buf);
+            System.out.println(entry.getItem());
         } finally {
             is.close();
         }
