@@ -14,6 +14,7 @@ package org.openxdr;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
+import java.util.HashMap;
 import java.util.Map;
 
 public final class XdrUnion {
@@ -76,5 +77,12 @@ public final class XdrUnion {
 
     public static Codec<Union> newCodec(Map<Integer, Codec<?>> cases) {
         return newCodec(cases, null);
+    }
+
+    public static Map<Integer, Codec<?>> newCases(Object... args) {
+        final Map<Integer, Codec<?>> cases = new HashMap<Integer, Codec<?>>();
+        for (int i = 0; i < args.length; i += 2)
+            cases.put((Integer) args[i], (Codec<?>) args[i + 1]);
+        return cases;
     }
 }
