@@ -22,7 +22,7 @@ import java.nio.charset.CharacterCodingException;
 import junit.framework.TestCase;
 
 final class Xdr {
-
+    
     interface StringEntry {
         String getItem();
 

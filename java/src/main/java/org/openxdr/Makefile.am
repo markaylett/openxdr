@@ -9,6 +9,7 @@ EXTRA_DIST = \
 	XdrBool.java \
 	XdrBuffer.java \
 	XdrDouble.java \
+	XdrEnum.java \
 	XdrFloat.java \
 	XdrHyper.java \
 	XdrInt.java \
