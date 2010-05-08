@@ -1,7 +1,8 @@
 EXTRA_DIST = \
-	ArraySlice.java \
+	Array.java \
 	Codec.java \
-	OpaqueSlice.java \
+	Opaque.java \
+	Slice.java \
 	Union.java \
 	Utility.java \
 	Void.java \

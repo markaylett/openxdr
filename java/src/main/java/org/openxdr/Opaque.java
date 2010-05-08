@@ -12,7 +12,7 @@
  */
 package org.openxdr;
 
-public final class Opaque {
+public final class Opaque implements Slice {
     private final byte[] buf;
     private final int offset;
     private final int len;
