@@ -21,50 +21,65 @@ import java.nio.charset.CharacterCodingException;
 
 import junit.framework.TestCase;
 
-final class Xdr {
-    
+public final class Test extends TestCase {
     interface StringEntry {
         String getItem();
 
         StringEntry getNext();
     }
 
-    static final Codec<StringEntry> STRING_ENTRY = new Codec<StringEntry>() {
+    public static final class XdrStringEntry {
 
-        public final void encode(ByteBuffer buf, StringEntry val)
-                throws CharacterCodingException {
-            XdrString.encode(buf, val.getItem());
-            XdrOptional.encode(buf, val.getNext(), this);
+        private XdrStringEntry() {
         }
 
-        public final StringEntry decode(ByteBuffer buf)
-                throws CharacterCodingException {
-            final String item = XdrString.decode(buf).toString();
-            final StringEntry next = XdrOptional.decode(buf, this);
-            return new StringEntry() {
-                public final String getItem() {
-                    return item;
-                }
+        static final Codec<StringEntry> CODEC = new Codec<StringEntry>() {
 
-                public final StringEntry getNext() {
-                    return next;
-                }
-            };
+            public final void encode(ByteBuffer buf, StringEntry val)
+                    throws CharacterCodingException {
+                ITEM_CODEC.encode(buf, val.getItem());
+                NEXT_CODEC.encode(buf, val.getNext());
+            }
+
+            public final StringEntry decode(ByteBuffer buf)
+                    throws CharacterCodingException {
+                final String item = ITEM_CODEC.decode(buf);
+                final StringEntry next = NEXT_CODEC.decode(buf);
+                return new StringEntry() {
+                    public final String getItem() {
+                        return item;
+                    }
+
+                    public final StringEntry getNext() {
+                        return next;
+                    }
+                };
+            }
+        };
+
+        private static final Codec<String> ITEM_CODEC = XdrString.CODEC;
+        private static final Codec<StringEntry> NEXT_CODEC = XdrOptional
+                .newCodec(CODEC);
+    }
+
+    public static final class XdrStringList {
+
+        private XdrStringList() {
         }
-    };
 
-    static final Codec<StringEntry> STRING_LIST = new Codec<StringEntry>() {
+        public static final Codec<StringEntry> CODEC = new Codec<StringEntry>() {
 
-        public final void encode(ByteBuffer buf, StringEntry val)
-                throws CharacterCodingException {
-            XdrOptional.encode(buf, val, STRING_ENTRY);
-        }
+            public final void encode(ByteBuffer buf, StringEntry val)
+                    throws CharacterCodingException {
+                XdrOptional.encode(buf, val, XdrStringEntry.CODEC);
+            }
 
-        public final StringEntry decode(ByteBuffer buf)
-                throws CharacterCodingException {
-            return XdrOptional.decode(buf, STRING_ENTRY);
-        }
-    };
+            public final StringEntry decode(ByteBuffer buf)
+                    throws CharacterCodingException {
+                return XdrOptional.decode(buf, XdrStringEntry.CODEC);
+            }
+        };
+    }
 
     interface Error2 {
         Long getSubcode();
@@ -72,32 +87,34 @@ final class Xdr {
         String getMessage();
     }
 
-    static final Codec<Error2> ERROR2 = new Codec<Error2>() {
+    public static final class XdrError2 {
 
-        public final void encode(ByteBuffer buf, Error2 val)
-                throws CharacterCodingException {
-            XdrHyper.encode(buf, val.getSubcode());
-            XdrString.encode(buf, val.getMessage());
+        private XdrError2() {
         }
 
-        public final Error2 decode(ByteBuffer buf)
-                throws CharacterCodingException {
-            final Long subcode = XdrHyper.decode(buf);
-            final String message = XdrString.decode(buf).toString();
-            return new Error2() {
-                public final Long getSubcode() {
-                    return subcode;
-                }
+        public static final Codec<Error2> CODEC = new Codec<Error2>() {
+            public final void encode(ByteBuffer buf, Error2 val)
+                    throws CharacterCodingException {
+                XdrHyper.encode(buf, val.getSubcode());
+                XdrString.encode(buf, val.getMessage());
+            }
 
-                public final String getMessage() {
-                    return message;
-                }
-            };
-        }
-    };
-}
+            public final Error2 decode(ByteBuffer buf)
+                    throws CharacterCodingException {
+                final Long subcode = XdrHyper.decode(buf);
+                final String message = XdrString.decode(buf);
+                return new Error2() {
+                    public final Long getSubcode() {
+                        return subcode;
+                    }
 
-public final class Test extends TestCase {
+                    public final String getMessage() {
+                        return message;
+                    }
+                };
+            }
+        };
+    }
 
     public static void main(String[] args) throws Exception {
         final ByteBuffer buf = XdrBuffer.allocate(1024);
@@ -108,7 +125,7 @@ public final class Test extends TestCase {
             final int n = fc.read(buf);
             System.out.println(n);
             buf.flip();
-            final Xdr.StringEntry entry = Xdr.STRING_LIST.decode(buf);
+            final StringEntry entry = XdrStringList.CODEC.decode(buf);
             System.out.println(entry.getItem());
         } finally {
             is.close();
@@ -170,6 +187,6 @@ public final class Test extends TestCase {
         final ByteBuffer buf = XdrBuffer.allocate(8);
         XdrString.encode(buf, CharBuffer.wrap("test"));
         buf.flip();
-        assertEquals("test", XdrString.decode(buf).toString());
+        assertEquals("test", XdrString.decode(buf));
     }
 }

@@ -57,7 +57,7 @@ public final class XdrString {
         encode(buf, CharBuffer.wrap(val));
     }
 
-    public static CharBuffer decode(ByteBuffer buf, int maxsize)
+    public static String decode(ByteBuffer buf, int maxsize)
             throws CharacterCodingException {
         final int len = XdrInt.decode(buf);
         if (maxsize < len)
@@ -68,27 +68,27 @@ public final class XdrString {
         if (0 != val.remaining())
             result.throwException();
         decodeAlign(buf);
-        return (CharBuffer) val.flip();
+        return val.flip().toString();
     }
 
-    public static CharBuffer decode(ByteBuffer buf)
+    public static String decode(ByteBuffer buf)
             throws CharacterCodingException {
         return decode(buf, Integer.MAX_VALUE);
     }
 
-    public static Codec<CharBuffer> newCodec(final int maxsize) {
-        return new Codec<CharBuffer>() {
-            public final void encode(ByteBuffer buf, CharBuffer val)
+    public static Codec<String> newCodec(final int maxsize) {
+        return new Codec<String>() {
+            public final void encode(ByteBuffer buf, String val)
                     throws CharacterCodingException {
                 XdrString.encode(buf, val, maxsize);
             }
 
-            public final CharBuffer decode(ByteBuffer buf)
+            public final String decode(ByteBuffer buf)
                     throws CharacterCodingException {
                 return XdrString.decode(buf, maxsize);
             }
         };
     }
 
-    public static final Codec<CharBuffer> CODEC = newCodec(Integer.MAX_VALUE);
+    public static final Codec<String> CODEC = newCodec(Integer.MAX_VALUE);
 }

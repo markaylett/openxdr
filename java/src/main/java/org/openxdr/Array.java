@@ -12,7 +12,7 @@
  */
 package org.openxdr;
 
-public final class Array<T> {
+public final class Array<T> implements Slice {
     private final T[] buf;
     private final int offset;
     private final int len;
