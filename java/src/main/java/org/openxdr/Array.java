@@ -12,23 +12,23 @@
  */
 package org.openxdr;
 
-public final class ArraySlice<T> {
+public final class Array<T> {
     private final T[] buf;
     private final int offset;
     private final int len;
 
-    public ArraySlice(T[] buf, int offset, int len) {
+    public Array(T[] buf, int offset, int len) {
         this.buf = buf;
         this.offset = offset;
         this.len = len;
     }
 
-    public ArraySlice(T[] buf) {
+    public Array(T[] buf) {
         this(buf, 0, buf.length);
     }
 
     @SuppressWarnings("unchecked")
-    public ArraySlice(int size) {
+    public Array(int size) {
         this((T[]) new Object[size]);
     }
 

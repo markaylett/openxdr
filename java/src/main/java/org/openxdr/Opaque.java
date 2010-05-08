@@ -12,22 +12,22 @@
  */
 package org.openxdr;
 
-public final class OpaqueSlice {
+public final class Opaque {
     private final byte[] buf;
     private final int offset;
     private final int len;
 
-    public OpaqueSlice(byte[] buf, int offset, int len) {
+    public Opaque(byte[] buf, int offset, int len) {
         this.buf = buf;
         this.offset = offset;
         this.len = len;
     }
 
-    public OpaqueSlice(byte[] buf) {
+    public Opaque(byte[] buf) {
         this(buf, 0, buf.length);
     }
 
-    public OpaqueSlice(int size) {
+    public Opaque(int size) {
         this(new byte[size]);
     }
 

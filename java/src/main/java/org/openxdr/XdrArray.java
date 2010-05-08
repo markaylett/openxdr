@@ -44,10 +44,10 @@ final class XdrArray {
         decode(buf, val, 0, val.length, codec);
     }
 
-    public static <T> Codec<ArraySlice<T>> newCodec(final Codec<T> codec,
+    public static <T> Codec<Array<T>> newCodec(final Codec<T> codec,
             final int size) {
-        return new Codec<ArraySlice<T>>() {
-            public final void encode(ByteBuffer buf, ArraySlice<T> val)
+        return new Codec<Array<T>>() {
+            public final void encode(ByteBuffer buf, Array<T> val)
                     throws CharacterCodingException {
                 if (val.getLength() != size)
                     throw new IllegalArgumentException();
@@ -55,9 +55,9 @@ final class XdrArray {
                         .getLength(), codec);
             }
 
-            public final ArraySlice<T> decode(ByteBuffer buf)
+            public final Array<T> decode(ByteBuffer buf)
                     throws CharacterCodingException {
-                final ArraySlice<T> val = new ArraySlice<T>(size);
+                final Array<T> val = new Array<T>(size);
                 XdrArray.decode(buf, val.getBuffer(), val.getOffset(), val
                         .getLength(), codec);
                 return val;
@@ -105,24 +105,23 @@ final class XdrArray {
         return decodeVar(buf, codec, Integer.MAX_VALUE);
     }
 
-    public static <T> Codec<ArraySlice<T>> newVarCodec(final Codec<T> codec,
+    public static <T> Codec<Array<T>> newVarCodec(final Codec<T> codec,
             final int maxsize) {
-        return new Codec<ArraySlice<T>>() {
-            public final void encode(ByteBuffer buf, ArraySlice<T> val)
+        return new Codec<Array<T>>() {
+            public final void encode(ByteBuffer buf, Array<T> val)
                     throws CharacterCodingException {
                 XdrArray.encodeVar(buf, val.getBuffer(), val.getOffset(), val
                         .getLength(), codec, maxsize);
             }
 
-            public final ArraySlice<T> decode(ByteBuffer buf)
+            public final Array<T> decode(ByteBuffer buf)
                     throws CharacterCodingException {
-                return new ArraySlice<T>(XdrArray
-                        .decodeVar(buf, codec, maxsize));
+                return new Array<T>(XdrArray.decodeVar(buf, codec, maxsize));
             }
         };
     }
 
-    public static <T> Codec<ArraySlice<T>> newVarCodec(final Codec<T> codec) {
+    public static <T> Codec<Array<T>> newVarCodec(final Codec<T> codec) {
         return newVarCodec(codec, Integer.MAX_VALUE);
     }
 }

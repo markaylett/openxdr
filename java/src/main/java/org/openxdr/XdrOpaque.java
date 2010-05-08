@@ -39,17 +39,17 @@ public final class XdrOpaque {
         decode(buf, val, 0, val.length);
     }
 
-    public static Codec<OpaqueSlice> newCodec(final int size) {
-        return new Codec<OpaqueSlice>() {
-            public final void encode(ByteBuffer buf, OpaqueSlice val) {
+    public static Codec<Opaque> newCodec(final int size) {
+        return new Codec<Opaque>() {
+            public final void encode(ByteBuffer buf, Opaque val) {
                 if (val.getLength() != size)
                     throw new IllegalArgumentException();
                 XdrOpaque.encode(buf, val.getBuffer(), val.getOffset(), val
                         .getLength());
             }
 
-            public final OpaqueSlice decode(ByteBuffer buf) {
-                final OpaqueSlice val = new OpaqueSlice(size);
+            public final Opaque decode(ByteBuffer buf) {
+                final Opaque val = new Opaque(size);
                 XdrOpaque.decode(buf, val.getBuffer(), val.getOffset(), val
                         .getLength());
                 return val;
@@ -86,20 +86,20 @@ public final class XdrOpaque {
         return decodeVar(buf, Integer.MAX_VALUE);
     }
 
-    public static Codec<OpaqueSlice> newVarCodec(final int maxsize) {
-        return new Codec<OpaqueSlice>() {
-            public final void encode(ByteBuffer buf, OpaqueSlice val)
+    public static Codec<Opaque> newVarCodec(final int maxsize) {
+        return new Codec<Opaque>() {
+            public final void encode(ByteBuffer buf, Opaque val)
                     throws CharacterCodingException {
                 XdrOpaque.encodeVar(buf, val.getBuffer(), val.getOffset(), val
                         .getLength(), maxsize);
             }
 
-            public final OpaqueSlice decode(ByteBuffer buf)
+            public final Opaque decode(ByteBuffer buf)
                     throws CharacterCodingException {
-                return new OpaqueSlice(XdrOpaque.decodeVar(buf, maxsize));
+                return new Opaque(XdrOpaque.decodeVar(buf, maxsize));
             }
         };
     }
 
-    public static final Codec<OpaqueSlice> VAR_CODEC = newVarCodec(Integer.MAX_VALUE);
+    public static final Codec<Opaque> VAR_CODEC = newVarCodec(Integer.MAX_VALUE);
 }
