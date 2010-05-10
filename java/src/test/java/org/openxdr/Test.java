@@ -15,7 +15,6 @@ package org.openxdr;
 import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.CharacterCodingException;
 
@@ -185,7 +184,7 @@ public final class Test extends TestCase {
 
     public final void testString() throws CharacterCodingException {
         final ByteBuffer buf = XdrBuffer.allocate(8);
-        XdrString.encode(buf, CharBuffer.wrap("test"));
+        XdrString.encode(buf, "test");
         buf.flip();
         assertEquals("test", XdrString.decode(buf));
     }
