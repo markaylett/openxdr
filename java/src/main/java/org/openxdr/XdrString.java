@@ -76,7 +76,7 @@ public final class XdrString {
         return decode(buf, Integer.MAX_VALUE);
     }
 
-    public static Codec<String> newCodec(final int maxsize) {
+    public static Codec<String> newVarCodec(final int maxsize) {
         return new Codec<String>() {
             public final void encode(ByteBuffer buf, String val)
                     throws CharacterCodingException {
@@ -90,5 +90,5 @@ public final class XdrString {
         };
     }
 
-    public static final Codec<String> CODEC = newCodec(Integer.MAX_VALUE);
+    public static final Codec<String> VAR_CODEC = newVarCodec(Integer.MAX_VALUE);
 }

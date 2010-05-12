@@ -56,7 +56,7 @@ public final class Test extends TestCase {
             }
         };
 
-        private static final Codec<String> ITEM_CODEC = XdrString.CODEC;
+        private static final Codec<String> ITEM_CODEC = XdrString.VAR_CODEC;
         private static final Codec<StringEntry> NEXT_CODEC = XdrOptional
                 .newCodec(CODEC);
     }
