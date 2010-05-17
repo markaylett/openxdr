@@ -19,70 +19,72 @@ import java.util.Map;
 
 public final class XdrUnion {
 
-    private static Codec<?> getCodec(int type, Map<Integer, Codec<?>> cases,
-            Codec<?> def) {
+    @SuppressWarnings("unchecked")
+    private static <T> Codec<Object> getCodec(T type,
+            Map<Integer, Codec<?>> cases, Codec<?> def) {
         Codec<?> codec = cases.get(type);
         if (null == codec) {
             if (null == def)
                 throw new IllegalArgumentException();
             codec = def;
         }
-        return codec;
+        return (Codec<Object>) codec;
     }
 
     private XdrUnion() {
     }
 
-    @SuppressWarnings("unchecked")
-    public static void encode(ByteBuffer buf, Union val,
+    public static <T> void encode(ByteBuffer buf, Union<T> val, Codec<T> sel,
             Map<Integer, Codec<?>> cases, Codec<?> def)
             throws CharacterCodingException {
-        final Codec codec = getCodec(val.getType(), cases, def);
-        XdrInt.encode(buf, val.getType());
+        final Codec<Object> codec = getCodec(val.getType(), cases, def);
+        sel.encode(buf, val.getType());
         codec.encode(buf, val.getValue());
     }
 
-    public static void encode(ByteBuffer buf, Union val,
+    public static <T> void encode(ByteBuffer buf, Union<T> val, Codec<T> sel,
             Map<Integer, Codec<?>> cases) throws CharacterCodingException {
-        encode(buf, val, cases, null);
+        encode(buf, val, sel, cases, null);
     }
 
-    @SuppressWarnings("unchecked")
-    public static Union decode(ByteBuffer buf, Map<Integer, Codec<?>> cases,
-            Codec<?> def) throws CharacterCodingException {
-        final int type = XdrInt.decode(buf);
-        final Codec codec = getCodec(type, cases, def);
-        return new Union(type, codec.decode(buf));
-    }
-
-    public static Union decode(ByteBuffer buf, Map<Integer, Codec<?>> cases)
+    public static <T> Union<T> decode(ByteBuffer buf, Codec<T> sel,
+            Map<Integer, Codec<?>> cases, Codec<?> def)
             throws CharacterCodingException {
-        return decode(buf, cases, null);
+        final T type = sel.decode(buf);
+        final Codec<?> codec = getCodec(type, cases, def);
+        return new Union<T>(type, codec.decode(buf));
     }
 
-    public static Codec<Union> newCodec(final Map<Integer, Codec<?>> cases,
-            final Codec<?> def) {
-        return new Codec<Union>() {
-            public final void encode(ByteBuffer buf, Union val)
+    public static <T> Union<T> decode(ByteBuffer buf, Codec<T> sel,
+            Map<Integer, Codec<?>> cases) throws CharacterCodingException {
+        return decode(buf, sel, cases, null);
+    }
+
+    public static <T> Codec<Union<T>> newCodec(final Codec<T> sel,
+            final Map<Integer, Codec<?>> cases, final Codec<?> def) {
+        return new Codec<Union<T>>() {
+            public final void encode(ByteBuffer buf, Union<T> val)
                     throws CharacterCodingException {
-                XdrUnion.encode(buf, val, cases, def);
+                XdrUnion.encode(buf, val, sel, cases, def);
             }
 
-            public final Union decode(ByteBuffer buf)
+            public final Union<T> decode(ByteBuffer buf)
                     throws CharacterCodingException {
-                return XdrUnion.decode(buf, cases, def);
+                return XdrUnion.decode(buf, sel, cases, def);
             }
         };
     }
 
-    public static Codec<Union> newCodec(Map<Integer, Codec<?>> cases) {
-        return newCodec(cases, null);
+    public static <T> Codec<Union<T>> newCodec(Codec<T> sel,
+            Map<Integer, Codec<?>> cases) {
+        return newCodec(sel, cases, null);
     }
 
-    public static Map<Integer, Codec<?>> newCases(Object... args) {
-        final Map<Integer, Codec<?>> cases = new HashMap<Integer, Codec<?>>();
+    @SuppressWarnings("unchecked")
+    public static<T> Map<T, Codec<?>> newCases(Object... args) {
+        final Map<T, Codec<?>> cases = new HashMap<T, Codec<?>>();
         for (int i = 0; i < args.length; i += 2)
-            cases.put((Integer) args[i], (Codec<?>) args[i + 1]);
+            cases.put((T) args[i], (Codec<?>) args[i + 1]);
         return cases;
     }
 }

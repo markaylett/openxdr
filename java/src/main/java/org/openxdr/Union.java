@@ -12,16 +12,16 @@
  */
 package org.openxdr;
 
-public final class Union {
-    private final int type;
+public final class Union<T> {
+    private final T type;
     private final Object value;
 
-    public Union(int type, Object value) {
+    public Union(T type, Object value) {
         this.type = type;
         this.value = value;
     }
 
-    public final int getType() {
+    public final T getType() {
         return type;
     }
 
