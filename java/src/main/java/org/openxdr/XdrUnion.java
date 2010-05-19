@@ -21,7 +21,7 @@ public final class XdrUnion {
 
     @SuppressWarnings("unchecked")
     private static <T> Codec<Object> getCodec(T type,
-            Map<Integer, Codec<?>> cases, Codec<?> def) {
+            Map<T, Codec<?>> cases, Codec<?> def) {
         Codec<?> codec = cases.get(type);
         if (null == codec) {
             if (null == def)
@@ -35,7 +35,7 @@ public final class XdrUnion {
     }
 
     public static <T> void encode(ByteBuffer buf, Union<T> val, Codec<T> sel,
-            Map<Integer, Codec<?>> cases, Codec<?> def)
+            Map<T, Codec<?>> cases, Codec<?> def)
             throws CharacterCodingException {
         final Codec<Object> codec = getCodec(val.getType(), cases, def);
         sel.encode(buf, val.getType());
@@ -43,12 +43,12 @@ public final class XdrUnion {
     }
 
     public static <T> void encode(ByteBuffer buf, Union<T> val, Codec<T> sel,
-            Map<Integer, Codec<?>> cases) throws CharacterCodingException {
+            Map<T, Codec<?>> cases) throws CharacterCodingException {
         encode(buf, val, sel, cases, null);
     }
 
     public static <T> Union<T> decode(ByteBuffer buf, Codec<T> sel,
-            Map<Integer, Codec<?>> cases, Codec<?> def)
+            Map<T, Codec<?>> cases, Codec<?> def)
             throws CharacterCodingException {
         final T type = sel.decode(buf);
         final Codec<?> codec = getCodec(type, cases, def);
@@ -56,12 +56,12 @@ public final class XdrUnion {
     }
 
     public static <T> Union<T> decode(ByteBuffer buf, Codec<T> sel,
-            Map<Integer, Codec<?>> cases) throws CharacterCodingException {
+            Map<T, Codec<?>> cases) throws CharacterCodingException {
         return decode(buf, sel, cases, null);
     }
 
     public static <T> Codec<Union<T>> newCodec(final Codec<T> sel,
-            final Map<Integer, Codec<?>> cases, final Codec<?> def) {
+            final Map<T, Codec<?>> cases, final Codec<?> def) {
         return new Codec<Union<T>>() {
             public final void encode(ByteBuffer buf, Union<T> val)
                     throws CharacterCodingException {
@@ -76,7 +76,7 @@ public final class XdrUnion {
     }
 
     public static <T> Codec<Union<T>> newCodec(Codec<T> sel,
-            Map<Integer, Codec<?>> cases) {
+            Map<T, Codec<?>> cases) {
         return newCodec(sel, cases, null);
     }
 
