@@ -17,5 +17,7 @@ EXTRA_DIST = \
 	XdrOpaque.java \
 	XdrOptional.java \
 	XdrString.java \
+	XdrUHyper.java \
+	XdrUInt.java \
 	XdrUnion.java \
 	XdrVoid.java
