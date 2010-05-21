@@ -15,7 +15,7 @@ package org.openxdr;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
 
-final class XdrArray {
+public final class XdrArray {
 
     private XdrArray() {
     }

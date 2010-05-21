@@ -15,7 +15,7 @@ package org.openxdr;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-final class XdrHyper {
+public final class XdrHyper {
 
     private XdrHyper() {
     }
