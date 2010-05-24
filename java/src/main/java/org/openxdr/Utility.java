@@ -60,21 +60,27 @@ final class Utility {
         final int pos = buf.position();
         final int len = ALIGN[pos % 4];
         if (0 < len) {
-            final int newPos = pos + len;
-            if (buf.limit() < newPos)
-                throw new BufferOverflowException();
-            buf.position(newPos);
-            System.arraycopy(PADDING, 0, buf.array(), pos, len);
+            if (buf.hasArray()) {
+                final int newPos = pos + len;
+                if (buf.limit() < newPos)
+                    throw new BufferOverflowException();
+                System.arraycopy(PADDING, 0, buf.array(), pos, len);
+                buf.position(newPos);
+            } else
+                buf.put(PADDING, 0, len);
         }
     }
 
     static void encodeAlign(ByteBuffer buf, byte[] val, int offset, int len) {
-        final int pos = buf.position();
-        final int newPos = pos + len;
-        if (buf.limit() < newPos)
-            throw new BufferOverflowException();
-        System.arraycopy(val, offset, buf.array(), pos, len);
-        buf.position(newPos);
+        if (buf.hasArray()) {
+            final int pos = buf.position();
+            final int newPos = pos + len;
+            if (buf.limit() < newPos)
+                throw new BufferOverflowException();
+            System.arraycopy(val, offset, buf.array(), pos, len);
+            buf.position(newPos);
+        } else
+            buf.put(val, offset, len);
         encodeAlign(buf);
     }
 
@@ -88,10 +94,15 @@ final class Utility {
 
     static void decodeAlign(ByteBuffer buf, byte[] val, int offset, int len) {
         final int pos = buf.position();
-        final int newPos = alignPos(pos + len);
-        if (buf.limit() < newPos)
-            throw new BufferUnderflowException();
-        System.arraycopy(buf.array(), pos, val, offset, len);
-        buf.position(newPos);
+        if (buf.hasArray()) {
+            final int newPos = alignPos(pos + len);
+            if (buf.limit() < newPos)
+                throw new BufferUnderflowException();
+            System.arraycopy(buf.array(), pos, val, offset, len);
+            buf.position(newPos); // Aligned.
+        } else {
+            buf.get(val, offset, len);
+            decodeAlign(buf);
+        }
     }
 }
