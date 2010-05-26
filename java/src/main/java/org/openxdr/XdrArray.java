@@ -44,6 +44,18 @@ public final class XdrArray {
         decode(buf, val, 0, val.length, codec);
     }
 
+    public static <T> int size(T[] val, int offset, int len, Codec<T> codec) {
+        int n = 0;
+        final int j = offset + len;
+        for (int i = offset; i < j; ++i)
+            n += codec.size(val[i]);
+        return n;
+    }
+
+    public static <T> int size(T[] val, Codec<T> codec) {
+        return size(val, 0, val.length, codec);
+    }
+
     public static <T> Codec<Array<T>> newCodec(final Codec<T> codec,
             final int size) {
         return new Codec<Array<T>>() {
@@ -64,7 +76,10 @@ public final class XdrArray {
             }
 
             public final int size(Array<T> val) {
-                return 0;
+                if (val.getLength() != size)
+                    throw new IllegalArgumentException();
+                return XdrArray.size(val.getBuffer(), val.getOffset(), val
+                        .getLength(), codec);
             }
         };
     }
@@ -109,6 +124,25 @@ public final class XdrArray {
         return decodeVar(buf, codec, Integer.MAX_VALUE);
     }
 
+    public static <T> int sizeVar(T[] val, int offset, int len, Codec<T> codec,
+            int maxsize) {
+        if (maxsize < len)
+            throw new IllegalArgumentException();
+        return XdrInt.SIZE + XdrArray.size(val, offset, len, codec);
+    }
+
+    public static <T> int sizeVar(T[] val, int offset, int len, Codec<T> codec) {
+        return sizeVar(val, offset, len, codec, Integer.MAX_VALUE);
+    }
+
+    public static <T> int sizeVar(T[] val, Codec<T> codec, int maxsize) {
+        return sizeVar(val, 0, val.length, codec, maxsize);
+    }
+
+    public static <T> int sizeVar(T[] val, Codec<T> codec) {
+        return sizeVar(val, codec, Integer.MAX_VALUE);
+    }
+
     public static <T> Codec<Array<T>> newVarCodec(final Codec<T> codec,
             final int maxsize) {
         return new Codec<Array<T>>() {
@@ -124,7 +158,8 @@ public final class XdrArray {
             }
 
             public final int size(Array<T> val) {
-                return 0;
+                return XdrArray.sizeVar(val.getBuffer(), val.getOffset(), val
+                        .getLength(), codec, maxsize);
             }
         };
     }

@@ -65,6 +65,8 @@ public final class XdrOpaque {
             }
 
             public final int size(Opaque val) {
+                if (val.getLength() != size)
+                    throw new IllegalArgumentException();
                 return XdrOpaque.size(val.getBuffer(), val.getOffset(), val
                         .getLength());
             }
