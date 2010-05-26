@@ -26,6 +26,8 @@ public final class XdrVoid {
         return Void.VALUE;
     }
 
+    public static final int SIZE = 0;
+
     public static final Codec<Void> CODEC = new Codec<Void>() {
         public final void encode(ByteBuffer buf, Void val) {
             XdrVoid.encode(buf, val);
@@ -33,6 +35,10 @@ public final class XdrVoid {
 
         public final Void decode(ByteBuffer buf) {
             return XdrVoid.decode(buf);
+        }
+
+        public final int size(Void val) {
+            return SIZE;
         }
     };
 }

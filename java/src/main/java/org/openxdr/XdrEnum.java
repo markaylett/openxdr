@@ -34,6 +34,8 @@ public final class XdrEnum {
         return valueOf(XdrInt.decode(buf), values);
     }
 
+    public static final int SIZE = XdrInt.SIZE;
+
     public static <T extends Enum<T>> Codec<T> newCodec(final T[] values) {
         return new Codec<T>() {
             public final void encode(ByteBuffer buf, T val) {
@@ -42,6 +44,10 @@ public final class XdrEnum {
 
             public final T decode(ByteBuffer buf) {
                 return XdrEnum.decode(buf, values);
+            }
+
+            public final int size(T val) {
+                return SIZE;
             }
         };
     }

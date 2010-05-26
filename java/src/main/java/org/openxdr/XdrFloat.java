@@ -30,6 +30,8 @@ public final class XdrFloat {
         return buf.getFloat();
     }
 
+    public static final int SIZE = 4;
+
     public static final Codec<Float> CODEC = new Codec<Float>() {
         public final void encode(ByteBuffer buf, Float val) {
             XdrFloat.encode(buf, val);
@@ -37,6 +39,10 @@ public final class XdrFloat {
 
         public final Float decode(ByteBuffer buf) {
             return XdrFloat.decode(buf);
+        }
+
+        public final int size(Float val) {
+            return SIZE;
         }
     };
 }

@@ -27,6 +27,8 @@ public final class XdrBool {
         return 0 != XdrInt.decode(buf);
     }
 
+    public static final int SIZE = XdrInt.SIZE;
+
     public static final Codec<Boolean> CODEC = new Codec<Boolean>() {
         public final void encode(ByteBuffer buf, Boolean val) {
             XdrBool.encode(buf, val);
@@ -34,6 +36,10 @@ public final class XdrBool {
 
         public final Boolean decode(ByteBuffer buf) {
             return XdrBool.decode(buf);
+        }
+
+        public final int size(Boolean val) {
+            return SIZE;
         }
     };
 }

@@ -12,6 +12,7 @@
  */
 package org.openxdr;
 
+import static org.openxdr.Utility.aligned;
 import static org.openxdr.Utility.decodeAlign;
 import static org.openxdr.Utility.encodeAlign;
 
@@ -39,6 +40,14 @@ public final class XdrOpaque {
         decode(buf, val, 0, val.length);
     }
 
+    public static int size(byte[] val, int offset, int len) {
+        return aligned(len);
+    }
+
+    public static int size(byte[] val) {
+        return size(val, 0, val.length);
+    }
+
     public static Codec<Opaque> newCodec(final int size) {
         return new Codec<Opaque>() {
             public final void encode(ByteBuffer buf, Opaque val) {
@@ -53,6 +62,11 @@ public final class XdrOpaque {
                 XdrOpaque.decode(buf, val.getBuffer(), val.getOffset(), val
                         .getLength());
                 return val;
+            }
+
+            public final int size(Opaque val) {
+                return XdrOpaque.size(val.getBuffer(), val.getOffset(), val
+                        .getLength());
             }
         };
     }
@@ -86,6 +100,20 @@ public final class XdrOpaque {
         return decodeVar(buf, Integer.MAX_VALUE);
     }
 
+    public static int sizeVar(byte[] val, int offset, int len, int maxsize) {
+        if (maxsize < len)
+            throw new IllegalArgumentException();
+        return XdrInt.SIZE + aligned(len);
+    }
+
+    public static int sizeVar(byte[] val, int maxsize) {
+        return sizeVar(val, 0, val.length, maxsize);
+    }
+
+    public static int sizeVar(byte[] val) {
+        return sizeVar(val, Integer.MAX_VALUE);
+    }
+
     public static Codec<Opaque> newVarCodec(final int maxsize) {
         return new Codec<Opaque>() {
             public final void encode(ByteBuffer buf, Opaque val)
@@ -97,6 +125,11 @@ public final class XdrOpaque {
             public final Opaque decode(ByteBuffer buf)
                     throws CharacterCodingException {
                 return new Opaque(XdrOpaque.decodeVar(buf, maxsize));
+            }
+
+            public final int size(Opaque val) {
+                return XdrOpaque.sizeVar(val.getBuffer(), val.getOffset(), val
+                        .getLength(), maxsize);
             }
         };
     }

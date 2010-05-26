@@ -20,8 +20,8 @@ import java.util.Map;
 public final class XdrUnion {
 
     @SuppressWarnings("unchecked")
-    private static <T> Codec<Object> getCodec(T type,
-            Map<T, Codec<?>> cases, Codec<?> def) {
+    private static <T> Codec<Object> getCodec(T type, Map<T, Codec<?>> cases,
+            Codec<?> def) {
         Codec<?> codec = cases.get(type);
         if (null == codec) {
             if (null == def)
@@ -60,6 +60,17 @@ public final class XdrUnion {
         return decode(buf, sel, cases, null);
     }
 
+    public static <T> int size(Union<T> val, Codec<T> sel,
+            Map<T, Codec<?>> cases, Codec<?> def) {
+        final Codec<Object> codec = getCodec(val.getType(), cases, def);
+        return sel.size(val.getType()) + codec.size(val.getValue());
+    }
+
+    public static <T> int size(Union<T> val, Codec<T> sel,
+            Map<T, Codec<?>> cases) {
+        return size(val, sel, cases, null);
+    }
+
     public static <T> Codec<Union<T>> newCodec(final Codec<T> sel,
             final Map<T, Codec<?>> cases, final Codec<?> def) {
         return new Codec<Union<T>>() {
@@ -72,6 +83,10 @@ public final class XdrUnion {
                     throws CharacterCodingException {
                 return XdrUnion.decode(buf, sel, cases, def);
             }
+
+            public final int size(Union<T> val) {
+                return XdrUnion.size(val, sel, cases, def);
+            }
         };
     }
 
@@ -81,7 +96,7 @@ public final class XdrUnion {
     }
 
     @SuppressWarnings("unchecked")
-    public static<T> Map<T, Codec<?>> newCases(Object... args) {
+    public static <T> Map<T, Codec<?>> newCases(Object... args) {
         final Map<T, Codec<?>> cases = new HashMap<T, Codec<?>>();
         for (int i = 0; i < args.length; i += 2)
             cases.put((T) args[i], (Codec<?>) args[i + 1]);

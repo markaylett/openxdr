@@ -41,11 +41,11 @@ final class Utility {
         }
     };
 
-    private static int alignPos(int pos) {
-        return pos + ALIGN[pos % 4];
+    private Utility() {
     }
 
-    private Utility() {
+    static int aligned(int n) {
+        return n + ALIGN[n % 4];
     }
 
     static CharsetEncoder getUtf8Encoder() {
@@ -86,7 +86,7 @@ final class Utility {
 
     static void decodeAlign(ByteBuffer buf) {
         final int pos = buf.position();
-        final int newPos = alignPos(pos);
+        final int newPos = aligned(pos);
         if (buf.limit() < newPos)
             throw new BufferUnderflowException();
         buf.position(newPos);
@@ -95,7 +95,7 @@ final class Utility {
     static void decodeAlign(ByteBuffer buf, byte[] val, int offset, int len) {
         final int pos = buf.position();
         if (buf.hasArray()) {
-            final int newPos = alignPos(pos + len);
+            final int newPos = aligned(pos + len);
             if (buf.limit() < newPos)
                 throw new BufferUnderflowException();
             System.arraycopy(buf.array(), pos, val, offset, len);

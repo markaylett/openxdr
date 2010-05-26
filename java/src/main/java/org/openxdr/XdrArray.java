@@ -62,6 +62,10 @@ public final class XdrArray {
                         .getLength(), codec);
                 return val;
             }
+
+            public final int size(Array<T> val) {
+                return 0;
+            }
         };
     }
 
@@ -117,6 +121,10 @@ public final class XdrArray {
             public final Array<T> decode(ByteBuffer buf)
                     throws CharacterCodingException {
                 return new Array<T>(XdrArray.decodeVar(buf, codec, maxsize));
+            }
+
+            public final int size(Array<T> val) {
+                return 0;
             }
         };
     }

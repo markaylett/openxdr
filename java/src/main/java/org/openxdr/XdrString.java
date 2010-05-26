@@ -12,6 +12,7 @@
  */
 package org.openxdr;
 
+import static org.openxdr.Utility.aligned;
 import static org.openxdr.Utility.decodeAlign;
 import static org.openxdr.Utility.encodeAlign;
 import static org.openxdr.Utility.getUtf8Decoder;
@@ -71,9 +72,30 @@ public final class XdrString {
         return val.flip().toString();
     }
 
-    public static String decode(ByteBuffer buf)
-            throws CharacterCodingException {
+    public static String decode(ByteBuffer buf) throws CharacterCodingException {
         return decode(buf, Integer.MAX_VALUE);
+    }
+
+    public static int size(CharBuffer val, int maxsize) {
+        final int len = val.length();
+        if (maxsize < len)
+            throw new IllegalArgumentException();
+        return XdrInt.SIZE + aligned(len);
+    }
+
+    public static int size(CharBuffer val) throws CharacterCodingException {
+        return size(val, Integer.MAX_VALUE);
+    }
+
+    public static int size(String val, int maxsize) {
+        final int len = val.length();
+        if (maxsize < len)
+            throw new IllegalArgumentException();
+        return XdrInt.SIZE + aligned(len);
+    }
+
+    public static int size(String val) throws CharacterCodingException {
+        return size(val, Integer.MAX_VALUE);
     }
 
     public static Codec<String> newVarCodec(final int maxsize) {
@@ -86,6 +108,10 @@ public final class XdrString {
             public final String decode(ByteBuffer buf)
                     throws CharacterCodingException {
                 return XdrString.decode(buf, maxsize);
+            }
+
+            public final int size(String val) {
+                return XdrString.size(val, maxsize);
             }
         };
     }

@@ -30,6 +30,8 @@ public final class XdrInt {
         return buf.getInt();
     }
 
+    public static final int SIZE = 4;
+
     public static final Codec<Integer> CODEC = new Codec<Integer>() {
         public final void encode(ByteBuffer buf, Integer val) {
             XdrInt.encode(buf, val);
@@ -37,6 +39,10 @@ public final class XdrInt {
 
         public final Integer decode(ByteBuffer buf) {
             return XdrInt.decode(buf);
+        }
+
+        public final int size(Integer val) {
+            return SIZE;
         }
     };
 }

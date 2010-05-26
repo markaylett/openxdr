@@ -35,6 +35,8 @@ public final class XdrUHyper {
         return val;
     }
 
+    public static final int SIZE = 8;
+
     public static final Codec<Long> CODEC = new Codec<Long>() {
         public final void encode(ByteBuffer buf, Long val) {
             XdrUHyper.encode(buf, val);
@@ -42,6 +44,10 @@ public final class XdrUHyper {
 
         public final Long decode(ByteBuffer buf) {
             return XdrUHyper.decode(buf);
+        }
+
+        public final int size(Long val) {
+            return SIZE;
         }
     };
 }

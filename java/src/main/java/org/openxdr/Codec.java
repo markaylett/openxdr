@@ -19,4 +19,6 @@ public interface Codec<T> {
     void encode(ByteBuffer buf, T val) throws CharacterCodingException;
 
     T decode(ByteBuffer buf) throws CharacterCodingException;
+
+    int size(T val);
 }

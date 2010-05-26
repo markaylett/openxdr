@@ -37,6 +37,11 @@ public final class XdrOptional {
         return val;
     }
 
+    public static <T> int size(T val, Codec<T> codec) {
+        final int n = null == val ? 0 : codec.size(val);
+        return XdrBool.SIZE + n;
+    }
+
     public static <T> Codec<T> newCodec(final Codec<T> codec) {
         return new Codec<T>() {
             public final void encode(ByteBuffer buf, T val)
@@ -47,6 +52,10 @@ public final class XdrOptional {
             public final T decode(ByteBuffer buf)
                     throws CharacterCodingException {
                 return XdrOptional.decode(buf, codec);
+            }
+
+            public final int size(T val) {
+                return XdrOptional.size(val, codec);
             }
         };
     }

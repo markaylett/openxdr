@@ -30,6 +30,8 @@ public final class XdrHyper {
         return buf.getLong();
     }
 
+    public static final int SIZE = 8;
+
     public static final Codec<Long> CODEC = new Codec<Long>() {
         public final void encode(ByteBuffer buf, Long val) {
             XdrHyper.encode(buf, val);
@@ -37,6 +39,10 @@ public final class XdrHyper {
 
         public final Long decode(ByteBuffer buf) {
             return XdrHyper.decode(buf);
+        }
+
+        public final int size(Long val) {
+            return SIZE;
         }
     };
 }

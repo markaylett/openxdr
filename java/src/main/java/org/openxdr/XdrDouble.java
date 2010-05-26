@@ -30,6 +30,8 @@ public final class XdrDouble {
         return buf.getDouble();
     }
 
+    public static final int SIZE = 8;
+
     public static final Codec<Double> CODEC = new Codec<Double>() {
         public final void encode(ByteBuffer buf, Double val) {
             XdrDouble.encode(buf, val);
@@ -37,6 +39,10 @@ public final class XdrDouble {
 
         public final Double decode(ByteBuffer buf) {
             return XdrDouble.decode(buf);
+        }
+
+        public final int size(Double val) {
+            return SIZE;
         }
     };
 }

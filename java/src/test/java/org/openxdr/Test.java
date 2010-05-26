@@ -54,6 +54,10 @@ public final class Test extends TestCase {
                     }
                 };
             }
+
+            public final int size(StringEntry val) {
+                return 0;
+            }
         };
 
         private static final Codec<String> ITEM_CODEC = XdrString.VAR_CODEC;
@@ -76,6 +80,10 @@ public final class Test extends TestCase {
             public final StringEntry decode(ByteBuffer buf)
                     throws CharacterCodingException {
                 return XdrOptional.decode(buf, XdrStringEntry.CODEC);
+            }
+
+            public final int size(StringEntry val) {
+                return 0;
             }
         };
     }
@@ -111,6 +119,10 @@ public final class Test extends TestCase {
                         return message;
                     }
                 };
+            }
+
+            public final int size(Error2 val) {
+                return 0;
             }
         };
     }
